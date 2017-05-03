@@ -52,7 +52,7 @@
       var p1=refreshImages(params);
       params["subject"]="thing";
       var p2=refreshThings(params);
-      var p3=refreshThingType(params);
+  //    var p3=refreshThingType(params);
       $rootScope.params = params;
       $q.all([p1,p2]).then(
         function(){
@@ -199,7 +199,7 @@
       var image=this.images[i];
       if (image.thing_id === IdThing.thing_id && image.priority===0) {
         this.setCurrentImage(i, true);
-        this.setCurrentThingForCurrentImage();
+    //    this.setCurrentThingForCurrentImage();
         break;
       }
     }

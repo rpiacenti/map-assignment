@@ -31,10 +31,13 @@
       }
 
       this.$doCheck = function(){
+        vm.images = [];
+        vm.currentThing = null;
         vm.images = currentSubjects.getImages();
         vm.currentThing = currentSubjects.getCurrentThing();
+        console.log("THINGS: ", $rootScope.aThings);
         vm.imgs = getImages(vm.images, vm.currentThing);
-  //      console.log("IMGS: ", vm.images);
+      //  console.log("IMGS: ", vm.images);
         if($rootScope.InfoOpen == false){
           displaySubjects();
         }
@@ -89,6 +92,7 @@
 
     function getImages(images, idThing) {
       vm.aTempI = [];
+
       if(idThing != undefined){
         angular.forEach(images, function(im){
           if(im.thing_id == idThing.thing_id){
@@ -138,6 +142,7 @@
             displaySubject(ti);
           }
         });
+        $rootScope.InfoOpen == true;
       }
 
       function displaySubject(ti) {
