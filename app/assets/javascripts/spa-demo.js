@@ -36,6 +36,7 @@
 //= require spa-demo/geoloc/current_origin/current_origin.service
 //= require spa-demo/geoloc/current_origin/current_origin_selector.component
 
+
 //= require spa-demo/layout/layout.module
 //= require spa-demo/layout/image_query_size.service
 //= require spa-demo/layout/navbar/navbar.component
@@ -65,6 +66,10 @@
 //= require spa-demo/subjects/things/things.component
 
 //= require spa-demo/subjects/current_subjects/current_subjects.service
+//= require spa-demo/subjects/current_thing_type/current_thing_type.service
 //= require spa-demo/subjects/current_subjects/current_subjects.component
 //= require spa-demo/subjects/current_images/current_images.component
 //= require spa-demo/subjects/current_things/current_things.component
+//= require spa-demo/subjects/current_thing_type/current_thing_type.component
+//= require spa-demo/subjects/current_thing_type/current_type.component
+//= require spa-demo/subjects/thingtype/thing_type_selector.component

@@ -19,6 +19,6 @@ test:
 production:
   clients:
     default:
-      uri: <%= ENV['MLAB_URI'] %>
+      uri: <%= ENV['MLAB_URI'] ||= "mongodb://heroku_fpb5c278:qn622m0chjvgi8l9v8m8uffv36@ds163679.mlab.com:63679/heroku_fpb5c278"%>
       options:
         connect_timeout: 15

@@ -14,23 +14,23 @@
       provider.positionOverride = coords;
     }
 
-    function MyLocation() {      
+    function MyLocation() {
     }
 
-    provider.$get = ["$window", "$q", "spa-demo.geoloc.geocoder", 
+    provider.$get = ["$window", "$q", "spa-demo.geoloc.geocoder",
                      function($window, $q, geocoder) {
 
       //returns true/false whether current location provided
-      MyLocation.prototype.isCurrentLocationSupported = function() {   
+      MyLocation.prototype.isCurrentLocationSupported = function() {
         //console.log("isCurrentLocationSupported", $window.navigator.geolocation != null);
-        return $window.navigator.geolocation != null;     
+        return $window.navigator.geolocation != null;
       }
 
       //determines current position and returns the geocoded location information
       MyLocation.prototype.getCurrentLocation = function() {
         //console.log("getCurrentLocation");
         var service = this;
-        var deferred = $q.defer();        
+        var deferred = $q.defer();
 
         if (!this.isCurrentLocationSupported()) {
           deferred.reject("geolocation not supported by browser");
@@ -43,7 +43,7 @@
         }
 
         return deferred.promise;
-      }                            
+      }
 
       //completes a deferred with the geocoded location of the current position
       MyLocation.prototype.geocodeGeoposition = function(deferred, position) {
@@ -55,10 +55,10 @@
             console.log("locationResult", location);
             deferred.resolve(location);
           },
-          function geocodeFailure(err){ 
+          function geocodeFailure(err){
             deferred.reject(err);
           });
-      } 
+      }
 
       return new MyLocation();
     }];

@@ -13,7 +13,7 @@
   templateUrl.$inject = ["spa-demo.config.APP_CONFIG"];
   function templateUrl(APP_CONFIG) {
     return APP_CONFIG.current_origin_selector_html;
-  }    
+  }
 
   CurrentOriginSelectorController.$inject = ["$scope",
                                              "spa-demo.geoloc.geocoder",
@@ -50,9 +50,9 @@
       return currentOrigin.clearLocation();
     }
     function changeDistance() {
-      currentOrigin.setDistance(vm.distanceLimit);      
+      currentOrigin.setDistance(vm.distanceLimit);
     }
-    
+
     function useCurrentLocation() {
       myLocation.getCurrentLocation().then(
         function(location){
@@ -64,14 +64,7 @@
           console.log(err);
           vm.myPositionError=err;
         });
-    }    
-
-
-
-
-
-
-
+    }
 
   }
 })();

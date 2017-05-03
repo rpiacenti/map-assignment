@@ -62,7 +62,7 @@ namespace :ptourist do
     puts "downloading #{url}"
     contents = open(url,{ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE}).read
     original_content=ImageContent.new(:image_id=>img[:image].id,
-                                      :content_type=>"image/jpeg", 
+                                      :content_type=>"image/jpeg",
                                       :content=>BSON::Binary.new(contents))
     ImageContentCreator.new(img[:image], original_content).build_contents.save!
   end
@@ -82,7 +82,7 @@ namespace :ptourist do
       puts "building image for #{thing.name}, #{img[:caption]}, by #{organizer.name}"
       image=Image.create(:creator_id=>organizer.id,:caption=>img[:caption],:lat=>img[:lat],:lng=>img[:lng])
       organizer.add_role(Role::ORGANIZER, image).save
-      ThingImage.new(:thing=>thing, :image=>image, 
+      ThingImage.new(:thing=>thing, :image=>image,
                      :creator_id=>organizer.id)
                 .tap {|ti| ti.priority=img[:priority] if img[:priority]}.save!
       create_image_content img.merge(:image=>image)
@@ -93,7 +93,7 @@ namespace :ptourist do
   task reset_all: [:users,:subjects] do
   end
 
-  desc "deletes things, images, and links" 
+  desc "deletes things, images, and links"
   task delete_subjects: :environment do
     puts "removing #{Thing.count} things and #{ThingImage.count} thing_images"
     puts "removing #{Image.count} images"
@@ -128,13 +128,14 @@ namespace :ptourist do
     puts "users:#{User.pluck(:name)}"
   end
 
-  desc "reset things, images, and links" 
+  desc "reset things, images, and links"
   task subjects: [:users] do
     puts "creating things, images, and links"
 
     thing={:name=>"B&O Railroad Museum",
     :description=>"Discover your adventure at the B&O Railroad Museum in Baltimore, Maryland. Explore 40 acres of railroad history at the birthplace of American railroading. See, touch, and hear the most important American railroad collection in the world! Seasonal train rides for all ages.",
-    :notes=>"Trains rule, boats and cars drool"}
+    :notes=>"Trains rule, boats and cars drool",
+    :subjtype=>"Museum"}
     organizer=get_user("alice")
     members=boy_users
     images=[
@@ -156,7 +157,8 @@ namespace :ptourist do
 
     thing={:name=>"Baltimore Water Taxi",
     :description=>"The Water Taxi is more than a jaunt across the harbor; it’s a Baltimore institution and a way of life. Every day, thousands of residents and visitors not only rely on us to take them safely to their destinations, they appreciate our knowledge of the area and our courteous service. And every day, hundreds of local businesses rely on us to deliver customers to their locations.  We know the city. We love the city. We keep the city moving. We help keep businesses thriving. And most importantly, we offer the most unique way to see Baltimore and provide an unforgettable experience that keeps our passengers coming back again and again.",
-    :notes=>"No on-duty pirates, please"}
+    :notes=>"No on-duty pirates, please",
+    :subjtype=>"Service"}
     organizer=get_user("alice")
     members=boy_users
     images=[
@@ -182,7 +184,8 @@ namespace :ptourist do
 
     thing={:name=>"Rent-A-Tour",
     :description=>"Professional guide services and itinerary planner in Baltimore, Washington DC, Annapolis and the surronding region",
-    :notes=>"Bus is clean and ready to roll"}
+    :notes=>"Bus is clean and ready to roll",
+    :subjtype=>"Service"}
     organizer=get_user("greg")
     members=boy_users
     images=[
@@ -202,13 +205,14 @@ namespace :ptourist do
 
     thing={:name=>"Holiday Inn Timonium",
     :description=>"Group friendly located just a few miles north of Baltimore's Inner Harbor. Great neighborhood in Baltimore County",
-    :notes=>"Early to bed, early to rise"}
+    :notes=>"Early to bed, early to rise",
+    :subjtype=>"Hotel"}
     organizer=get_user("carol")
     members=girl_users
     images=[
     {:path=>"db/bta/hitim-001.jpg",
      :caption=>"Hotel Front Entrance",
-     :lng=>-76.64285450000001, 
+     :lng=>-76.64285450000001,
      :lat=>39.454538,
      :priority=>0
      }
@@ -217,89 +221,91 @@ namespace :ptourist do
 
     thing={:name=>"National Aquarium",
     :description=>"Since first opening in 1981, the National Aquarium has become a world-class attraction in the heart of Baltimore. Recently celebrating our 35th Anniversary, we continue to be a symbol of urban renewal and a source of pride for Marylanders. With a mission to inspire the world’s aquatic treasures, the Aquarium is consistently ranked as one of the nation’s top aquariums and has hosted over 51 million guests since opening. A study by the Maryland Department of Economic and Employment Development determined that the Aquarium annually generates nearly $220 million in revenues, 2,000 jobs, and $6.8 million in State and local taxes. It was also recently named one of Baltimore’s Best Places to Work! In addition to housing nearly 20,000 animals, we have countless science-based education programs and hands-on conservation projects spanning from right here in the Chesapeake Bay to abroad in Costa Rica. Once you head inside, The National Aquarium has the ability to transport you all over the world in a matter of hours to discover hundreds of incredible species. From the Freshwater Crocodile in our Australia: Wild Extremes exhibit all the way to a Largetooth Sawfish in the depths of Shark Alley. Recently winning top honors from the Association of Zoos and Aquariums for outstanding design, exhibit innovation and guest engagement, we can’t forget about Living Seashore; an exhibit where guests can touch Atlantic stingrays, Horseshoe crabs, and even Moon jellies if they wish! It is a place for friends, family, and people from all walks of life to come and learn about the extraordinary creatures we share our planet with. Through education, research, conservation action and advocacy, the National Aquarium is truly pursuing a vision to change the way humanity cares for our ocean planet.",
-    :notes=>"Remember to water the fish"}
+    :notes=>"Remember to water the fish",
+    :subjtype=>"Aquarium"}
     organizer=get_user("carol")
     members=girl_users
     images=[
     {:path=>"db/bta/naqua-001.jpg",
      :caption=>"National Aquarium buildings",
-     :lng=>-76.6083, 
+     :lng=>-76.6083,
      :lat=>39.2851,
      :priority=>0
      },
     {:path=>"db/bta/naqua-002.jpg",
      :caption=>"Blue Blubber Jellies",
-     :lng=>-76.6083, 
+     :lng=>-76.6083,
      :lat=>39.2851,
      },
     {:path=>"db/bta/naqua-003.jpg",
      :caption=>"Linne's two-toed sloths",
-     :lng=>-76.6083, 
+     :lng=>-76.6083,
      :lat=>39.2851,
      },
     {:path=>"db/bta/naqua-004.jpg",
      :caption=>"Hosting millions of students and teachers",
-     :lng=>-76.6083, 
+     :lng=>-76.6083,
      :lat=>39.2851,
      }
     ]
     create_thing thing, organizer, members, images
 
     thing={:name=>"Hyatt Place Baltimore",
-    :description=>"The New Hyatt Place Baltimore/Inner Harbor, located near Fells Point, offers a refreshing blend of style and innovation in a neighborhood alive with cultural attractions, shopping and amazing local restaurants. 
+    :description=>"The New Hyatt Place Baltimore/Inner Harbor, located near Fells Point, offers a refreshing blend of style and innovation in a neighborhood alive with cultural attractions, shopping and amazing local restaurants.
 
 Whether you’re hungry, thirsty or bored, Hyatt Place Baltimore/Inner Harbor has something to satisfy your needs. Start your day with our free a.m. Kitchen Skillet™, featuring hot breakfast sandwiches, breads, cereals and more. Visit our 24/7 Gallery Market for freshly packaged grab n’ go items, order a hot, made-to-order appetizer or sandwich from our 24/7 Gallery Menu or enjoy a refreshing beverage from our Coffee to Cocktails Bar.
- 
+
 Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio equipment and free weights. Then, float and splash around in our indoor pool, open year-round for your relaxation. There’s plenty of other spaces throughout our Inner Harbor hotel for you to chill and socialize with other guests. For your comfort and convenience, all Hyatt Place hotels are smoke-free.
-"}
+",
+:subjtype=>"Restaurant"}
     organizer=get_user("marsha")
     members=girl_users
     images=[
     {:path=>"db/bta/hpm-001.jpg",
      :caption=>"Hotel Front Entrance",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847,
      :priority=>0
      },
     {:path=>"db/bta/hpm-002.jpg",
      :caption=>"Terrace",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847,
      :priority=>1
      },
     {:path=>"db/bta/hpm-003.jpg",
      :caption=>"Cozy Corner",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      },
     {:path=>"db/bta/hpm-004.jpg",
      :caption=>"Fitness Center",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      },
     {:path=>"db/bta/hpm-005.jpg",
      :caption=>"Gallery Area",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      },
     {:path=>"db/bta/hpm-006.jpg",
      :caption=>"Harbor Room",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      },
     {:path=>"db/bta/hpm-007.jpg",
      :caption=>"Indoor Pool",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      },
     {:path=>"db/bta/hpm-008.jpg",
      :caption=>"Lobby",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      },
     {:path=>"db/bta/hpm-009.jpg",
      :caption=>"Specialty King",
-     :lng=>-76.5987, 
+     :lng=>-76.5987,
      :lat=>39.2847
      }
     ]
@@ -308,7 +314,7 @@ Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio
     organizer=get_user("peter")
     image= {:path=>"db/bta/aquarium.jpg",
      :caption=>"Aquarium",
-     :lng=>-76.6083, 
+     :lng=>-76.6083,
      :lat=>39.2851
      }
     create_image organizer, image
@@ -316,7 +322,7 @@ Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio
     organizer=get_user("jan")
     image= {:path=>"db/bta/bromo_tower.jpg",
      :caption=>"Bromo Tower",
-     :lng=>-76.6228645, 
+     :lng=>-76.6228645,
      :lat=>39.2876736
      }
     create_image organizer, image
@@ -356,7 +362,7 @@ Work up a sweat in our 24-hour StayFit Gym, which features Life Fitness® cardio
     organizer=get_user("marsha")
     image= {:path=>"db/bta/visitor_center.jpg",
      :caption=>"Visitor Center",
-     :lng=>-76.6155792, 
+     :lng=>-76.6155792,
      :lat=>39.28565
      }
     create_image organizer, image

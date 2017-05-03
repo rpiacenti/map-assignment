@@ -24,15 +24,17 @@
                 <a ui-sref="images({id:null})">Images</a></li>
             <li ui-sref-active="{'active': 'things'}">
                 <a ui-sref="things({id:null})">Things</a></li>
+            <!-- <li ui-sref-active="active">
+                <a ui-sref="home">Subjects</a></li> -->
             <li ui-sref-active="active">
-                <a ui-sref="home">Subjects</a></li>
+                    <a ui-sref="thingtype">Thing Type</a></li>
           </ul>
-          
+
         </li>
       </ul>
-      
-      <span class="origin-control navbar-left">
-        <sd-current-origin-selector></sd-current-origin-selector>
+
+      <span class="nav navbar-nav navbar-left">
+        <sd-thing-type-selector></sd-thing-type-selector>
       </span>
 
       <ul class="nav navbar-nav navbar-right">

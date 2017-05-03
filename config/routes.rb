@@ -5,7 +5,7 @@ Rails.application.routes.draw do
 
   mount_devise_token_auth_for 'User', at: 'auth'
 
-  scope :api, defaults: {format: :json}  do 
+  scope :api, defaults: {format: :json}  do
     resources :foos, except: [:new, :edit]
     resources :bars, except: [:new, :edit]
     resources :images, except: [:new, :edit] do
@@ -13,14 +13,15 @@ Rails.application.routes.draw do
       get "thing_images",  controller: :thing_images, action: :image_things
       get "linkable_things",  controller: :thing_images, action: :linkable_things
     end
-    resources :things, except: [:new, :edit] do
-      resources :thing_images, only: [:index, :create, :update, :destroy]
+    resources :things, except: [:index, :new, :edit] do
+      resources :thing_images, only: [:create, :update, :destroy]
     end
     get "images/:id/content", as: :image_content, controller: :images, action: :content, defaults:{format: :jpg}
     get 'geocoder/addresses' => "geocoder#addresses"
     get 'geocoder/positions' => "geocoder#positions"
     get 'subjects' => "thing_images#subjects"
-  end      
+    get 'subjects_type' => "thing_images#subjects_type"
+  end
 
   get "/client-assets/:name.:format", :to => redirect("/client/client-assets/%{name}.%{format}")
 #  get "/", :to => redirect("/client/index.html")

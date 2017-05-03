@@ -3,7 +3,7 @@
 
   angular
     .module("spa-demo.subjects")
-    .factory("spa-demo.subjects.ThingImage", ThingImage);
+    .factory("spa-demo.subjects.ThingTypeImage", ThingImage);
 
   ThingImage.$inject = ["$resource", "spa-demo.config.APP_CONFIG"];
   function ThingImage($resource, APP_CONFIG) {
@@ -13,5 +13,5 @@
       { update: {method:"PUT"}
       });
   }
-  
+
 })();

@@ -10,20 +10,20 @@
     var service = this;
     this.version=0;
     this.location=null;
-    this.distance=0;    
+    this.distance=0;
 
     return;
     ////////////////
   }
   CurrentOrigin.prototype.getVersion = function() {
     return this.version;
-  }  
+  }
   CurrentOrigin.prototype.clearLocation = function() {
     this.location=null;
     this.version += 1;
-  }  
+  }
   CurrentOrigin.prototype.setLocation = function(location) {
-    console.log("setLocation", location);
+//    console.log("setLocation", location);
     this.location = angular.copy(location);
     this.version += 1;
   }
@@ -34,16 +34,16 @@
     return this.location ? this.location.formatted_address : null;
   }
   CurrentOrigin.prototype.getPosition = function() {
-    return this.location && this.location.position ? 
+    return this.location && this.location.position ?
         angular.copy(this.location.position) : null;
   }
   CurrentOrigin.prototype.getAddress = function() {
-    return this.location && this.location.address ? 
+    return this.location && this.location.address ?
         angular.copy(this.location.address) : null;
   }
 
   CurrentOrigin.prototype.setDistance = function(distance) {
-    console.log("setDistance", distance);
+//    console.log("setDistance", distance);
     this.distance = distance;
     this.version += 1;
   }

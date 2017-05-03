@@ -1,8 +1,9 @@
 class ThingImagesController < ApplicationController
   include ActionController::Helpers
   helper ThingsHelper
-  wrap_parameters :thing_image, include: ["image_id", "thing_id", "priority"]
+  wrap_parameters :thing_image, include: ["image_id", "thing_id", "priority", "subjtype"]
   before_action :get_thing, only: [:index, :update, :destroy]
+  before_action :get_subjtype, only: [:index, :update, :destroy, :subjects_type]
   before_action :get_image, only: [:image_things]
   before_action :get_thing_image, only: [:update, :destroy]
   before_action :authenticate_user!, only: [:create, :update, :destroy]
@@ -17,8 +18,8 @@ class ThingImagesController < ApplicationController
 
   def image_things
     authorize @image, :get_things?
-    @thing_images=@image.thing_images.prioritized.with_name
-    render :index 
+    @thing_images=@image.thing_images.prioritized.with_name.with_subjtype
+    render :index
   end
 
   def linkable_things
@@ -32,10 +33,19 @@ class ThingImagesController < ApplicationController
     render "things/index"
   end
 
+  def show_subjtype
+    authorize @thing
+    things = ThingPolicy::Scope.new(current_user,
+                                    Thing.where(:subjtype=>@thing.subjtype).all)
+                                    .user_roles(false)
+    @thing = ThingPolicy.merge(things)
+  end
+
   def subjects
     expires_in 1.minute, :public=>true
     miles=params[:miles] ? params[:miles].to_f : nil
     subject=params[:subject]
+    subjtype=params[:subjtype] ? params[:subjtype] : nil
     distance=params[:distance] ||= "false"
     reverse=params[:order] && params[:order].downcase=="desc"  #default to ASC
     last_modified=ThingImage.last_modified
@@ -48,6 +58,35 @@ class ThingImagesController < ApplicationController
         .with_name
         .with_caption
         .with_position
+        .with_subjtype
+      if subjtype != nil
+       get_subjtype
+      end
+      @thing_images=@thing_images.things    if subject && subject.downcase=="thing"
+      @thing_images=ThingImage.with_distance(@origin, @thing_images) if distance.downcase=="true"
+      render "thing_images/index"
+    end
+  end
+
+  def subjects_type
+    expires_in 1.minute, :public=>true
+    miles=params[:miles] ? params[:miles].to_f : nil
+    subject=params[:subject]
+    subjtype=params[:subjtype] ? params[:subjtype].to_f : nil
+    distance=params[:distance] ||= "false"
+    reverse=params[:order] && params[:order].downcase=="desc"  #default to ASC
+    last_modified=ThingImage.last_modified
+    state="#{request.headers['QUERY_STRING']}:#{last_modified}"
+    #use eTag versus last_modified -- ng-token-auth munges if-modified-since
+    eTag="#{Digest::MD5.hexdigest(state)}"
+
+    if stale?  :etag=>eTag
+      @thing_images=ThingImage.within_range(@origin, miles, reverse)
+        .with_name
+        .with_caption
+        .with_position
+        .with_subjtype
+      get_subjtype
       @thing_images=@thing_images.things    if subject && subject.downcase=="thing"
       @thing_images=ThingImage.with_distance(@origin, @thing_images) if distance.downcase=="true"
       render "thing_images/index"
@@ -97,6 +136,9 @@ class ThingImagesController < ApplicationController
     def get_thing
       @thing ||= Thing.find(params[:thing_id])
     end
+    def get_subjtype
+      @thing ||= Thing.where("subjtype" => params[:subjtype])
+    end
     def get_image
       @image ||= Image.find(params[:image_id])
     end
@@ -109,7 +151,7 @@ class ThingImagesController < ApplicationController
           #_ids only required in payload when not part of URI
           p.require(:image_id)    if !params[:image_id]
           p.require(:thing_id)    if !params[:thing_id]
-        }.permit(:priority, :image_id, :thing_id)
+        }.permit(:priority, :image_id, :thing_id, :subjtype)
     end
     def thing_image_update_params
       params.require(:thing_image).permit(:priority)
@@ -124,4 +166,5 @@ class ThingImagesController < ApplicationController
           "an origin [lng/lat] required")
       end
     end
+
 end

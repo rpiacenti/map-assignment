@@ -18,14 +18,14 @@
   templateUrl.$inject = ["spa-demo.config.APP_CONFIG"];
   function templateUrl(APP_CONFIG) {
     return APP_CONFIG.image_viewer_html;
-  }    
+  }
 
   ImageViewerController.$inject = ["$scope", "$element","spa-demo.layout.ImageQuerySize"];
   function ImageViewerController($scope, $element,ImageQuerySize) {
     var sizing=null;
     var vm=this;
     vm.imageUrl=imageUrl;
-    vm.imageId=imageId;    
+    vm.imageId=imageId;
     vm.imageCaption=imageCaption;
     vm.isCurrentIndex=isCurrentIndex;
     vm.previousImage=previousImage;
@@ -33,29 +33,29 @@
 
     vm.$onInit = function() {
       if (!vm.currentIndex) { vm.currentIndex = 0; }
-      console.log(vm.name, "ImageViewerController", $scope);
+//      console.log(vm.name, "ImageViewerController", $scope);
     }
     vm.$postLink = function() {
       sizing=new ImageQuerySize($element.find('div'), this.minWidth);
       vm.queryString=sizing.queryString();
-      sizing.listen(resizeHandler);      
-    }        
+      sizing.listen(resizeHandler);
+    }
     vm.$onDestroy = function() {
       sizing.nolisten(resizeHandler);
     }
     vm.$onChanges = function(changes) {
-      console.log("$onChanges", vm.name, changes);
+//      console.log("$onChanges", vm.name, changes);
       if (changes.currentImage) {
         vm.currentIndex = changes.currentImage.currentValue;
       }
     }
     return;
     //////////////
-    function resizeHandler(event) { 
-      console.log("window resized");
+    function resizeHandler(event) {
+//      console.log("window resized");
       if (sizing.updateSizes(vm.minWidth)) {
         vm.queryString=sizing.queryString();
-        console.log("new query size", vm.queryString);
+//        console.log("new query size", vm.queryString);
         $scope.$apply();
       }
     }
@@ -69,7 +69,7 @@
       setCurrentIndex(vm.currentIndex-1);
     }
     function setCurrentIndex(index) {
-      console.log("setCurrentIndex", vm.name, index);
+//      console.log("setCurrentIndex", vm.name, index);
       var originalValue = vm.currentIndex;
 
       if (vm.images && vm.images.length > 0) {
@@ -105,7 +105,7 @@
     function imageId(object) {
       if (!object) { return null }
       var id = object.image_id ? object.image_id : object.id;
-      return id; 
-    }  
+      return id;
+    }
   }
 })();

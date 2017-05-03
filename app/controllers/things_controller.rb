@@ -2,8 +2,9 @@ class ThingsController < ApplicationController
   include ActionController::Helpers
   helper ThingsHelper
   before_action :set_thing, only: [:show, :update, :destroy]
+  before_action :set_thing_type, only: [:show_thing_type]
   before_action :authenticate_user!, only: [:create, :update, :destroy]
-  wrap_parameters :thing, include: ["name", "description", "notes"]
+  wrap_parameters :thing, include: ["name", "description", "notes", "thing_type"]
   after_action :verify_authorized
   after_action :verify_policy_scoped, only: [:index]
 
@@ -59,10 +60,12 @@ class ThingsController < ApplicationController
     def set_thing
       @thing = Thing.find(params[:id])
     end
-
+    def set_thing_type
+      @thing = Thing.where("thing_type" => params[:thing_type])
+    end
     def thing_params
       params.require(:thing).tap {|p|
           p.require(:name) #throws ActionController::ParameterMissing
-        }.permit(:name, :description, :notes)
+        }.permit(:name, :description, :notes, :thing_type)
     end
 end
